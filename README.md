@@ -17,7 +17,6 @@ order_date_tbl %>%
 order_date_tbl %>%
     mutate(order_date_chr = as.character(order_date)) %>%
     mutate(order_date_chr2 = order_date_chr %>% str_c(" 00:00:00")) %>%
-    
     mutate(order_date_date = order_date_chr %>% ymd()) %>%
     mutate(order_date_dttm = order_date_chr2 %>% ymd_hms())
 
@@ -59,7 +58,6 @@ order_date_tbl %>%
 
 bike_sales_y_tbl <- bike_orderlines_tbl %>%
     select(order_date, total_price) %>%
-    
     mutate(order_date = ymd(order_date)) %>%
     mutate(year = year(order_date)) %>%
     group_by(year) %>%
@@ -98,7 +96,6 @@ bike_sales_y_tbl %>%
     mutate(pct_diff_1_chr = scales::percent(pct_diff_1))
 
 calculate_pct_diff <- function(data) {
-    
     data %>% 
         mutate(sales_lag_1 = lag(sales, n = 1)) %>%
         mutate(sales_lag_1 = case_when(
@@ -121,9 +118,7 @@ bike_sales_y_tbl %>%
     mutate(pct_diff_2011_chr = scales::percent(pct_diff_2011))
 
 bike_sales_m_tbl %>%
-    
     group_by(year) %>%
-    
     mutate(sales_jan = first(sales)) %>% 
     mutate(
         diff_jan         = sales - sales_jan,
@@ -137,24 +132,19 @@ bike_sales_y_tbl %>%
     mutate(cumulative_sales_pct_chr = cumulative_sales_pct %>% scales::percent())
 
 bike_sales_m_tbl %>%
-    
     group_by(year) %>%
-    
     mutate(cumulative_sales = cumsum(sales)) %>%
     mutate(cumulative_sales_pct = cumulative_sales / sum(sales)) %>%
     mutate(cumulative_sales_pct_chr = scales::percent(cumulative_sales_pct))
 
 bike_sales_m_tbl %>%
     mutate(roll_mean_3 = rollmean(sales, k = 3, na.pad = TRUE, align = "right", fill = NA)) %>%
-    
     mutate(roll_mean_6 = rollmean(sales, k = 6, na.pad = TRUE, align = "right", fill = NA))
 
 bike_orderlines_tbl %>%
-    
     mutate(order_date= ymd(order_date)) %>%
     filter(order_date %>% between(left = ymd("2012-01-01"), right = ymd("2013-12-31"))) 
 
 bike_orderlines_tbl %>%
-    
     mutate(order_date= ymd(order_date)) %>%
     filter(year(order_date) %in% c(2012,2013))
